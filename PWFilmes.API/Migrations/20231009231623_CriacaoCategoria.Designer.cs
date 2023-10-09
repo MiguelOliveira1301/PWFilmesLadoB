@@ -8,7 +8,7 @@ using PWFilmes.API.Context;
 namespace PWFilmes.API.Migrations
 {
     [DbContext(typeof(PWFilmesContext))]
-    [Migration("20231005015155_CriacaoCategoria")]
+    [Migration("20231009231623_CriacaoCategoria")]
     partial class CriacaoCategoria
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PWFilmes.API.Context;
 using PWFilmes.Domain;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,13 @@ namespace PWFilmes.API.Controllers
     [ApiController]
     public class CategoriaController : ControllerBase
     {
+        private PWFilmesContext _context;
+
+        public CategoriaController(PWFilmesContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet("listar")]
         public IActionResult Listar()
         {

@@ -9,10 +9,11 @@ namespace PWFilmes.API.Context
 {
     public class PWFilmesContext: DbContext
     {
-        public PWFilmesContext(DbContextOptions<PWFilmesContext> options)
-            : base(options)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
+            const string connection = "server=localhost;port=3306;database=PWFilmes;uid=root"; //;password=escreversenhaaqui
+            optionsBuilder.UseMySql(connection, ServerVersion.AutoDetect(connection));
+            base.OnConfiguring(optionsBuilder);
         }
 
         public DbSet<Categoria> CategoriaSet { get; set; }

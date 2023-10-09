@@ -18,4 +18,8 @@
     <ProjectReference Include="..\PWFilmes.Domain\PWFilmes.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
