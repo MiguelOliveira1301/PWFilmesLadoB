@@ -46,13 +46,25 @@ namespace PWFilmes.API.Controllers
             if ( _context.CategoriaSet.Any(p => p.Codigo == categoria.Codigo))
             {
                 _context.Attach(categoria); //DIZER QUE O OBJ JÁ EXISTE NO CONTEXT
-                _context.CategoriaSet.Update(categoria); //ATUALIZO A CATEGORIA
+                _context.CategoriaSet.Update(categoria); //ATUALIZO AD MUDANÇAS DE CATEGORIA
                 _context.SaveChanges(); //SALVO AS MUDANÇAS
 
-                return Ok($"Categoria {categoria.Codigo} Atualizada com Sucesso");
-            }
-            return BadRequest($"Categoria {categoria.Codigo} Não Localizada");
+                return Ok($"Categoria {categoria.Codigo} Atualizada com sucesso"); //SAÍ DO MÉTODO E NÃO EXECUTA A LINHA 54
+            } 
+            return BadRequest($"Categoria {categoria.Codigo} Não localizada");
         }
+        [HttpDelete("Deletar/{codigo}")]
+        public IActionResult Excluir(int codigo)
+        {
+            var categoria = _context.CategoriaSet.Find(codigo); //a categoria se define como categoria
+            if (categoria == null)
+            {
+                return BadRequest($"Categoria {codigo} não localizada");
+            }
+            _context.CategoriaSet.Remove(categoria);
+            _context.SaveChanges();
 
+            return Ok($"Categoria {codigo} removida com sucesso");
+        }
     }
 }
