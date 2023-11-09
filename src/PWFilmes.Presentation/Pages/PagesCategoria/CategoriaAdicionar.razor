@@ -1,14 +1,19 @@
 ﻿@page "/categoria-nova"
 @using PWFilmes.Domain
+@using System.Net
 
-<h3>Nova Categoria</h3> 
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Nova Categoria</h3>
 @*@categoriaModel.Descricao
-<br/>
-@categoriaModel.Cor*@
+    <br/>
+    @categoriaModel.Cor*@
 
-<EditForm Model="categoriaModel">
+<EditForm Model="categoriaModel" OnValidSubmit="Confirmar">
+    @*DURANTE O ENVIO DO FORMULÁRIO O MÉTODO CONFIRMAR VAI SER ACIONADO*@
     <DataAnnotationsValidator /> @*pega as restrições da classe e mostra parte 1*@
-    <ValidationSummary/> @*mostra todos os campos que estão com erro*@
+    <ValidationSummary /> @*mostra todos os campos que estão com erro*@
     <RadzenRow>
         <RadzenColumn Size="12" SizeMD="6" SizeLG="9">
             <RadzenFormField Text="Descrição" Style="width: 100%;">
@@ -27,12 +32,30 @@
         </RadzenColumn>
     </RadzenRow>
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Style="width: 100%" class="rz-mt-4">
-        <RadzenButton Icon="delete_forever" ButtonStyle="ButtonStyle.Danger" Text="Cancelar" class="rz-border-radius-10" />
-        <RadzenButton Icon="done" ButtonStyle="ButtonStyle.Success" Text="Confirmar" ButtonType="ButtonType.Submit" class="rz-border-radius-10" />
+        <RadzenButton Icon="delete_forever" ButtonStyle="ButtonStyle.Danger" Text="Cancelar" class="rz-border-radius-10" Click="Cancelar"/>
+        <RadzenButton Icon="done" ButtonStyle="ButtonStyle.Success" Text="Confirmar" ButtonType="ButtonType.Submit" class="rz-border-radius-10"/>
     </RadzenStack>
 </EditForm>
 
 
 @code {
     Categoria categoriaModel = new Categoria();
+
+    private async void Confirmar() //O MÉTODO PRECISA SER ASSÍNCRONO TAMBÉM
+    {
+        JsonContent categoriaModelJson = JsonContent.Create(categoriaModel); //criando variável do tipo JSson com o modelo da categoria
+
+        HttpResponseMessage response = await Http.PostAsync("api/Categoria/adicionar", categoriaModelJson); //criando variavel do tipo HttpResponse de forma assincrona
+
+        if (response.StatusCode == HttpStatusCode.Created) //qual status do responde veio, se esse status foi CREATED vou ser enviado a página de listagem
+        {
+            NavigationManager.NavigateTo("categoria/listar"); @*quero fazer a página voltar via código e não via link, pra isso serve o inject*@
+        }
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("categoria/listar");
+    }
 }
+,
