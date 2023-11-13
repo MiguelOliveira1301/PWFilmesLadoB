@@ -1,11 +1,14 @@
 ﻿@page "/categoria/listar"
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject DialogService DialogService
 
 @using System.Text.Json
 @using PWFilmes.Domain
 
 <h3>Categorias</h3>
+
+<RadzenDialog/>
 
 <RadzenButton
    Icon="add"
@@ -35,7 +38,21 @@
                 <RadzenColorPicker @bind-Value=@data.Cor Style="width: 100%" Disabled />
             </Template>
         </RadzenDataGridColumn>
-    </Columns>
+        <RadzenDataGridColumn
+                              TItem="Categoria"
+                              Filterable="false"
+                              Sortable="false"
+                              Title="Ações"
+                              TextAlign="TextAlign.Center"
+                              Width="50px">
+            <Template Context="data"> @*o DATA significa em qual linha o botão está*@
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" class="rz-border-radius-10" />
+                    <RadzenButton Icon="delete_forever" ButtonStyle="ButtonStyle.Danger" class="rz-border-radius-10" Click="() => RemoverCategoria(data.Codigo)"/>
+                </RadzenStack>
+            </Template>
+        </RadzenDataGridColumn>
+</Columns>
 </RadzenDataGrid>
 
 @code {
@@ -59,5 +76,21 @@
     public void NovaCategoria()
     {
         NavigationManager.NavigateTo("categoria-nova");
+    }
+    public async Task RemoverCategoria(int codigoCategoria)
+    {
+        var retorno = await
+            DialogService.Confirm($"Deseja incluir a categoria de codigos {codigoCategoria}?",
+            "PWFilmes",
+            new ConfirmOptions()
+            {
+                OkButtonText = "Sim",
+                CancelButtonText = "Não"
+            });
+
+        if(retorno is true)
+        {
+            await Http.DeleteAsync($"api/Categoria/deletar/{codigoCategoria}");
+        }
     }
 }
