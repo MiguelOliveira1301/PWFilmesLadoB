@@ -45,9 +45,9 @@
                               Title="Ações"
                               TextAlign="TextAlign.Center"
                               Width="50px">
-            <Template Context="data"> @*o DATA significa em qual linha o botão está*@
+            <Template Context="data">
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center">
-                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" class="rz-border-radius-10" />
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" class="rz-border-radius-10" Click="EditarCategoria" />
                     <RadzenButton Icon="delete_forever" ButtonStyle="ButtonStyle.Danger" class="rz-border-radius-10" Click="() => RemoverCategoria(data.Codigo)"/>
                 </RadzenStack>
             </Template>
@@ -77,6 +77,12 @@
     {
         NavigationManager.NavigateTo("categoria-nova");
     }
+
+    public void EditarCategoria()
+    {
+        NavigationManager.NavigateTo("categoria-editar");
+    }
+
     public async Task RemoverCategoria(int codigoCategoria)
     {
         var retorno = await
@@ -90,7 +96,9 @@
 
         if(retorno is true)
         {
-            await Http.DeleteAsync($"api/Categoria/deletar/{codigoCategoria}");
+            var response = await Http.DeleteAsync($"api/Categoria/deletar/{codigoCategoria}");
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                await OnInitializedAsync();
         }
     }
 }
