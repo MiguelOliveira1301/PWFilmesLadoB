@@ -1,6 +1,9 @@
-﻿@page "/categoria-editar"
+﻿@page "/categoria-editar/{codigoCategoria:int}"
 
 @using PWFilmes.Domain;
+@using System.Text.Json; @*faz a seriliazação e a deserialização*@
+
+@inject HttpClient Http;
 
 <h3>Editar Categoria</h3>
 
@@ -42,6 +45,22 @@
     </RadzenStack>
 </EditForm>
 
+@codigoCategoria
+
 @code {
-    Categoria categoriaModel = new Categoria();
+
+    [Parameter]
+    public int codigoCategoria { get; set; }
+    Categoria categoriaModel;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetAsync($"api/Categoria/obter/{codigoCategoria}");
+        var content = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        categoriaModel = JsonSerializer.Deserialize<Categoria>(content, options);
+
+        await base.OnInitializedAsync();
+    }
 }

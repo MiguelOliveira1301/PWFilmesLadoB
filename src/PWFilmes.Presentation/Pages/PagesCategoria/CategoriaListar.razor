@@ -47,7 +47,7 @@
                               Width="50px">
             <Template Context="data">
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center">
-                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" class="rz-border-radius-10" Click="EditarCategoria" />
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" class="rz-border-radius-10" Click="() => EditarCategoria(data.Codigo)" />
                     <RadzenButton Icon="delete_forever" ButtonStyle="ButtonStyle.Danger" class="rz-border-radius-10" Click="() => RemoverCategoria(data.Codigo)"/>
                 </RadzenStack>
             </Template>
@@ -78,9 +78,9 @@
         NavigationManager.NavigateTo("categoria-nova");
     }
 
-    public void EditarCategoria()
+    public void EditarCategoria(int codigoCategoria)
     {
-        NavigationManager.NavigateTo("categoria-editar");
+        NavigationManager.NavigateTo($"categoria-editar/{codigoCategoria}");
     }
 
     public async Task RemoverCategoria(int codigoCategoria)
